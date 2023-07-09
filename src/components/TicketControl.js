@@ -63,11 +63,9 @@ function TicketControl() {
     }
   };
 
-  const handleDeletingTicket = (id) => {
-    const newMainTicketList = mainTicketList.filter(
-      (ticket) => ticket.id !== id
-    );
-    setMainTicketList(newMainTicketList);
+  const handleDeletingTicket = async (id) => {
+    //very similar to how we update tickets. Main difference is that deleteDoc() does not take second argument for data.
+    await deleteDoc(doc(db, "tickets", id));
     setSelectedTicket(null);
   };
 
@@ -75,11 +73,9 @@ function TicketControl() {
     setEditing(true);
   };
 
-  const handleEditingTicketInList = (ticketToEdit) => {
-    const editedMainTicketList = mainTicketList
-      .filter((ticket) => ticket.id !== selectedTicket.id)
-      .concat(ticketToEdit);
-    setMainTicketList(editedMainTicketList);
+  const handleEditingTicketInList = async (ticketToEdit) => {
+    const ticketRef = doc(db, "tickets", ticketToEdit.id); //Create document reference with doc(). Arguments are db instance, collection name, and doc identifier. This function returns a DocumentReference Object.
+    await updateDoc(ticketRef, ticketToEdit); //updateDoc() takes two arguments, first is DocumentReference object, second is the new data that the ticket should be updated with.
     setEditing(false);
     setSelectedTicket(null);
   };
@@ -140,8 +136,7 @@ function TicketControl() {
   return (
     <React.Fragment>
       {currentlyVisibleState}
-      <button onClick={handleClick}>{buttonText}</button>
-      {error ? null : <button onCLick={handleClick}> {buttonText}</button>}
+      {error ? null : <button onClick={handleClick}>{buttonText}</button>}
     </React.Fragment>
   );
 }
