@@ -3,7 +3,7 @@ import NewTicketForm from "./NewTicketForm";
 import TicketList from "./TicketList";
 import EditTicketForm from "./EditTicketForm";
 import TicketDetail from "./TicketDetail";
-import db from "./../firebase.js"; //Gives access to db
+import { db } from "./../firebase.js"; //Gives access to db
 import {
   collection,
   addDoc,
