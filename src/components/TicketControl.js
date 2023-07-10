@@ -23,12 +23,24 @@ function TicketControl() {
 
   // collectionSnapshot is a QuerySnapshot, it is made up of DocumentSnapshot objects. These are firestore object types and have their own properties and methods. For example, collectionSnapshot.forEach(...) is not normal JS, it is a QuerySnapshot method.
 
+
+
+
+  //NOTE: When you create tickets as one account then delete the account the tickets remain in the db. Another thing to note is that if you create a new account with the same name the old tickets will be associated with the new account.
+
+  //Scenarios:
+    //Scenario 1: No user logged in ---> Should display no tickets and a message to log in (SUCCESS)
+    //Scenario 2: User logged in but no tickets ---> Should display no tickets and a message to create a ticket (SUCCESS)
+    //Scenario 3: User logged in and has tickets ---> Should display tickets associated with that user (SUCCESS)
+
+
   useEffect(() => {
     let queryRef;
   
-    if (auth.currentUser !== null) {
+    if (auth.currentUser !== null) { //Scenario 2 and 3
+      console.log(auth.currentUser.email);
       queryRef = query(collection(db, "tickets"), where("author", "==", auth.currentUser.email));
-    } else {
+    } else {  //Scenario 1, need this in order to render the "log in message for some reason"
       queryRef = collection(db, "tickets");
     }
   
