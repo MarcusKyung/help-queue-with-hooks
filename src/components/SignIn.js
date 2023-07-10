@@ -15,15 +15,20 @@ function SignIn() {
     event.preventDefault(); //Prevents default reloading of page on submit
     const email = event.target.email.value; //gets value of email/pw from form submit
     const password = event.target.password.value;
+    const confirmPassword = event.target.confirmPassword.value;
+
+    if (password !== confirmPassword) {
+      setSignUpSuccess("Passwords do not match!");
+      return;
+    }
+
     createUserWithEmailAndPassword(auth, email, password) //takes three args: auth instance, email, and password. Returns promise
-      .then((userCredential) => {
-        //for successful promise
+      .then((userCredential) => { //for successful promise
         setSignUpSuccess(
           `You've successfully signed up, ${userCredential.user.email}!`
         ); //userCredential represents firebase object. This object has property called user. User is a user object that extends functionality from UserInfo class. This is why we can access info about new user like their email
       })
-      .catch((error) => {
-        //for unsuccessful promise
+      .catch((error) => { //for unsuccessful promise
         setSignUpSuccess(`There was an error signing up: ${error.message}!`);
       });
   }
@@ -61,6 +66,7 @@ function SignIn() {
         <form onSubmit={doSignUp}>
           <input type="text" name="email" placeholder="email" />
           <input type="password" name="password" placeholder="Password" />
+          <input type="password" name="confirmPassword" placeholder="Password Again" />
           <button type="submit">Sign up</button>
         </form>
 
