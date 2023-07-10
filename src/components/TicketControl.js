@@ -4,14 +4,7 @@ import TicketList from "./TicketList";
 import EditTicketForm from "./EditTicketForm";
 import TicketDetail from "./TicketDetail";
 import { db, auth } from "./../firebase.js";
-import {
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  onSnapshot,
-  deleteDoc,
-} from "firebase/firestore"; //Import Firestore helper functions
+import { collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, query, where } from "firebase/firestore"; //Import Firestore helper functions
 
 function TicketControl() {
   const [formVisibleOnPage, setFormVisibleOnPage] = useState(false);
@@ -31,16 +24,25 @@ function TicketControl() {
   // collectionSnapshot is a QuerySnapshot, it is made up of DocumentSnapshot objects. These are firestore object types and have their own properties and methods. For example, collectionSnapshot.forEach(...) is not normal JS, it is a QuerySnapshot method.
 
   useEffect(() => {
+    let queryRef;
+  
+    if (auth.currentUser !== null) {
+      queryRef = query(collection(db, "tickets"), where("author", "==", auth.currentUser.email));
+    } else {
+      queryRef = collection(db, "tickets");
+    }
+  
     const unSubscribe = onSnapshot(
-      collection(db, "tickets"),
+      queryRef,
       (collectionSnapshot) => {
         const tickets = [];
         collectionSnapshot.forEach((doc) => {
           tickets.push({
-            names: doc.data().names, //.data is a method that returns all documents data in JS object
+            names: doc.data().names,
             location: doc.data().location,
             issue: doc.data().issue,
-            id: doc.id, //sets ticket object's id to the auto generated one from FS
+            id: doc.id,
+            author: doc.data().author,
           });
         });
         setMainTicketList(tickets);
@@ -49,9 +51,10 @@ function TicketControl() {
         setError(error.message);
       }
     );
-
+  
     return () => unSubscribe();
   }, []);
+  
 
   const handleClick = () => {
     if (selectedTicket != null) {
@@ -81,6 +84,7 @@ function TicketControl() {
   };
 
   const handleAddingNewTicketToList = async (newTicketData) => {
+    newTicketData.author = auth.currentUser.email;
     await addDoc(collection(db, "tickets"), newTicketData); //Collection allows us to specify collection in db. First arg is db instance, second is name of collection
     // addDoc function allows us to add new doc to specified collection. First arg is collection we want to add doc to, second is data we want to add. Second argument must be JS object. Object key and value will be FS doc field and value
 
@@ -96,7 +100,7 @@ function TicketControl() {
     setSelectedTicket(selection);
   };
 
-  
+
   if (auth.currentUser == null) {
     return (
       <React.Fragment>
@@ -145,6 +149,7 @@ function TicketControl() {
       <React.Fragment>
         {currentlyVisibleState}
         {error ? null : <button onClick={handleClick}>{buttonText}</button>}
+        <p>Signed in as: {auth.currentUser.email}</p>
       </React.Fragment>
     );
   }

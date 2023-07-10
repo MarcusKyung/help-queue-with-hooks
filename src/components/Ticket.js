@@ -8,6 +8,7 @@ function Ticket(props){
       <div onClick = {() => props.whenTicketClicked(props.id)}>
         <h3>{props.location} - {props.names}</h3>
         <p><em>{props.issue}</em></p>
+        <p>{props.author}</p> 
         <hr/>
       </div>
     </React.Fragment>
@@ -19,6 +20,7 @@ Ticket.propTypes = {
   location: PropTypes.string,
   issue: PropTypes.string,
   id: PropTypes.string,
+  author: PropTypes.string,
   whenTicketClicked: PropTypes.func
 }
 
