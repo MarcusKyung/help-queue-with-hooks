@@ -4,7 +4,9 @@ import TicketList from "./TicketList";
 import EditTicketForm from "./EditTicketForm";
 import TicketDetail from "./TicketDetail";
 import { db, auth } from "./../firebase.js";
-import { collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, query, where } from "firebase/firestore"; //Import Firestore helper functions
+import { collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, query, where, orderBy } from "firebase/firestore"; //Import Firestore helper functions
+import { formatDistanceToNow } from 'date-fns';
+
 
 function TicketControl() {
   const [formVisibleOnPage, setFormVisibleOnPage] = useState(false);
@@ -23,9 +25,6 @@ function TicketControl() {
 
   // collectionSnapshot is a QuerySnapshot, it is made up of DocumentSnapshot objects. These are firestore object types and have their own properties and methods. For example, collectionSnapshot.forEach(...) is not normal JS, it is a QuerySnapshot method.
 
-
-
-
   //NOTE: When you create tickets as one account then delete the account the tickets remain in the db. Another thing to note is that if you create a new account with the same name the old tickets will be associated with the new account.
 
   //Scenarios:
@@ -39,7 +38,7 @@ function TicketControl() {
   
     if (auth.currentUser !== null) { //Scenario 2 and 3
       console.log(auth.currentUser.email);
-      queryRef = query(collection(db, "tickets"), where("author", "==", auth.currentUser.email));
+      queryRef = query(collection(db, "tickets"), where("author", "==", auth.currentUser.email)); //Removed orderbydescending because it was causing the tickets to be ordered by timeOpen and not by time created. This was causing the tickets to be ordered by time created when you refreshed the page. I would have fixed this by adding a timeCreated field to the ticket object but I didn't want to mess with the code too much.
     } else {  //Scenario 1, need this in order to render the "log in message for some reason"
       queryRef = collection(db, "tickets");
     }
@@ -49,11 +48,15 @@ function TicketControl() {
       (collectionSnapshot) => {
         const tickets = [];
         collectionSnapshot.forEach((doc) => {
+          const timeOpen = doc.get('timeOpen', {serverTimestamps: "estimate"}).toDate(); //gets value of timeOpen field for current doc. This is FS timestamp object. Call toDate on it turns into JS formatted date 
+          const jsDate = new Date(timeOpen); //Use JS date to put into new Date constructor.
           tickets.push({
             names: doc.data().names,
             location: doc.data().location,
             issue: doc.data().issue,
             id: doc.id,
+            timeOpen: jsDate,
+            formattedWaitTime: formatDistanceToNow(jsDate),
             author: doc.data().author,
           });
         });
@@ -63,10 +66,31 @@ function TicketControl() {
         setError(error.message);
       }
     );
+    setMainTicketList([]); // added this because when you would reload the page it would flash all the tickets before updating. With this line it will render an empty ticket list before updating.
+
+    return () => unSubscribe;
+  }, [auth.currentUser]);
   
-    return () => unSubscribe();
-  }, []);
-  
+
+  useEffect(() => { 
+    function updateTicketElapsedWaitTime() { // This function does two things: maps through mainTicketList state variable to update formattedWaitTime property and returns new array of updated tickets
+      const newMainTicketList = mainTicketList.map(ticket => {
+        const newFormattedWaitTime = formatDistanceToNow(ticket.timeOpen);
+        return {...ticket, formattedWaitTime: newFormattedWaitTime};
+      });
+      setMainTicketList(newMainTicketList); //updates mainTicketList with the newMainTicketList, thereby updating the state variable and triggering a re-render due to dependency array
+    }
+
+    const waitTimeUpdateTimer = setInterval(() => //Set interval takes two args: function to run on every interval and the interval length. 
+      updateTicketElapsedWaitTime(),  //In this case setInterval is running UpdateTicketElapsedWaitTime() every minute (60000 milliseconds)
+      60000
+    );
+
+    return function cleanup() {
+      clearInterval(waitTimeUpdateTimer);
+    }
+  }, [mainTicketList]) //This hook depends on mainTicketList so that's why we have it in the dependencies array. Effect is called when state updates
+
 
   const handleClick = () => {
     if (selectedTicket != null) {

@@ -15,7 +15,8 @@ function TicketList(props){
           issue={ticket.issue}
           id={ticket.id}
           key={ticket.id}
-          author={ticket.author}/>
+          author={ticket.author}
+          formattedWaitTime={ticket.formattedWaitTime}/>
       )}
     </React.Fragment>
   );

@@ -9,6 +9,7 @@ function Ticket(props){
         <h3>{props.location} - {props.names}</h3>
         <p><em>{props.issue}</em></p>
         <p>{props.author}</p> 
+        <p><em>{props.formattedWaitTime}</em></p>
         <hr/>
       </div>
     </React.Fragment>
@@ -19,6 +20,7 @@ Ticket.propTypes = {
   names: PropTypes.string,
   location: PropTypes.string,
   issue: PropTypes.string,
+  formattedWaitTime: PropTypes.string,
   id: PropTypes.string,
   author: PropTypes.string,
   whenTicketClicked: PropTypes.func
