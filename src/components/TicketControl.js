@@ -6,6 +6,11 @@ import TicketDetail from "./TicketDetail";
 import { db, auth } from "./../firebase.js";
 import { collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, query, where, orderBy } from "firebase/firestore"; //Import Firestore helper functions
 import { formatDistanceToNow } from 'date-fns';
+import { Button } from "react-bootstrap";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 
 function TicketControl() {
@@ -140,7 +145,13 @@ function TicketControl() {
   if (auth.currentUser == null) {
     return (
       <React.Fragment>
-        <h1>You must be signed in to access the queue.</h1>
+        <Row>
+          <Col />
+          <Col>
+            <h1 style={{ color: "red" , marginTop: "1em"}}>You must be signed in to access the queue!</h1>
+          </Col>
+          <Col />
+        </Row>
       </React.Fragment>
     );
   } else if (auth.currentUser != null) {
@@ -184,8 +195,9 @@ function TicketControl() {
     return (
       <React.Fragment>
         {currentlyVisibleState}
-        {error ? null : <button onClick={handleClick}>{buttonText}</button>}
-        <p>Signed in as: {auth.currentUser.email}</p>
+        <ButtonGroup>
+          {error ? null : <Button variant="primary" onClick={handleClick}>{buttonText}</Button>}
+        </ButtonGroup>
       </React.Fragment>
     );
   }

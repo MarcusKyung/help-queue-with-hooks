@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { auth } from "./../firebase.js";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, } from "firebase/auth";
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from "react-bootstrap/Form";
 
 function SignIn() {
   const [signUpSuccess, setSignUpSuccess] = useState(null);
@@ -60,29 +61,53 @@ function SignIn() {
 
   return (
     <React.Fragment>
-      <React.Fragment>
-        <h1>Sign up</h1>
-        {signUpSuccess}
-        <form onSubmit={doSignUp}>
-          <input type="text" name="email" placeholder="email" />
-          <input type="password" name="password" placeholder="Password" />
-          <input type="password" name="confirmPassword" placeholder="Password Again" />
-          <button type="submit">Sign up</button>
-        </form>
-
-        <h1>Sign In</h1>
-        {signInSuccess}
-        <form onSubmit={doSignIn}>
-          <input type="text" name="signinEmail" placeholder="email" />
-          <input type="password" name="signinPassword" placeholder="Password" />
-          <button type="submit">Sign in</button>
-        </form>
-
-        <h1>Sign Out</h1>
-        {signOutSuccess}
-        <br />
-        <button onClick={doSignOut}>Sign out</button>
-      </React.Fragment>
+      <Row>
+        <Col />
+        <Col>
+          <Card>
+            <Card.Header><h1>Sign up</h1></Card.Header>
+            <Card.Body>
+              {signUpSuccess}
+              <Form onSubmit={doSignUp}>
+                <Form.Group>
+                  <Form.Label>Email Address:</Form.Label>
+                  <Form.Control type="text" name="email" placeholder="Email" />
+                  <Form.Label>Password:</Form.Label>
+                  <Form.Control type="password" name="password" placeholder="Password" />
+                  <Form.Label>Password Confirmation:</Form.Label>
+                  <Form.Control type="password" name="confirmPassword" placeholder="Password Confirmation" />
+                </Form.Group>
+                <Button variant="primary" type="submit" block>Sign Up</Button>
+              </Form>
+            </Card.Body>  
+          </Card>
+          <br />
+          <Card>
+            <Card.Header><h1>Sign In</h1></Card.Header>
+            <Card.Body>
+              {signInSuccess}
+              <Form onSubmit={doSignIn}>
+                <Form.Group>
+                  <Form.Label>Email Address:</Form.Label>
+                  <Form.Control type="text" name="signinEmail" placeholder="Email" />
+                  <Form.Label>Password:</Form.Label>
+                  <Form.Control type="password" name="signinPassword" placeholder="Password" />
+                  <Button variant="primary" type="submit" block>Sign In</Button>
+                </Form.Group>
+              </Form>
+            </Card.Body>
+          </Card>
+          <br />
+          <Card>
+            <Card.Header><h1>Sign Out</h1></Card.Header>
+            <Card.Body>
+              {signOutSuccess}
+            </Card.Body>
+            <Button variant="primary" onClick={doSignOut}>Sign Out</Button>
+          </Card>
+        </Col>
+        <Col />
+      </Row>
     </React.Fragment>
   );
 }
