@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { auth } from "../firebase";
-
+import App from "./App";
 
 // const LinkTo = styled.link`
 //   color: white;
@@ -16,7 +16,7 @@ import { auth } from "../firebase";
 //   `;
 
 
-function Header() {
+function Header(props) {
   return (
     <React.Fragment>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -24,9 +24,9 @@ function Header() {
           <Navbar.Brand>Epicodus Help Queue</Navbar.Brand>
             <Nav className="ms-auto">
             <Navbar.Text className="ml-3">
-              {auth.currentUser ? (`Currently Signed in: ${auth.currentUser.email}`) : ("Not Signed in")}
+              {props.currentUser ? (`Currently Signed in: ${props.currentUser.email}`) : ("Not Signed in")}
             </Navbar.Text>              
-            <Button style={{ marginLeft: "1rem", }} variant="outline-primary"><Link to="/sign-in">{auth.currentUser ? "Sign Out" : "Sign In"}</Link></Button>
+            <Button style={{ marginLeft: "1rem", }} variant="outline-primary"><Link to="/sign-in">{props.currentUser ? "Sign Out" : "Sign In"}</Link></Button>
             <Button style={{ marginLeft: "1rem", }} variant="outline-primary"><Link to="/">Home</Link></Button>
             </Nav>
         </Container>

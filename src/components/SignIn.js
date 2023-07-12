@@ -77,7 +77,8 @@ function SignIn() {
                   <Form.Label>Password Confirmation:</Form.Label>
                   <Form.Control type="password" name="confirmPassword" placeholder="Password Confirmation" />
                 </Form.Group>
-                <Button variant="primary" type="submit" block>Sign Up</Button>
+                <br />
+                <Button variant="primary" type="submit">Sign Up</Button>
               </Form>
             </Card.Body>  
           </Card>
@@ -92,7 +93,8 @@ function SignIn() {
                   <Form.Control type="text" name="signinEmail" placeholder="Email" />
                   <Form.Label>Password:</Form.Label>
                   <Form.Control type="password" name="signinPassword" placeholder="Password" />
-                  <Button variant="primary" type="submit" block>Sign In</Button>
+                  <br />
+                  <Button variant="primary" type="submit">Sign In</Button>
                 </Form.Group>
               </Form>
             </Card.Body>
@@ -102,8 +104,9 @@ function SignIn() {
             <Card.Header><h1>Sign Out</h1></Card.Header>
             <Card.Body>
               {signOutSuccess}
+              <Button variant="primary" onClick={doSignOut}>Sign Out</Button>
             </Card.Body>
-            <Button variant="primary" onClick={doSignOut}>Sign Out</Button>
+
           </Card>
         </Col>
         <Col />

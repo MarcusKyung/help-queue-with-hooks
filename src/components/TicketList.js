@@ -1,14 +1,11 @@
 import React from "react";
 import Ticket from "./Ticket";
 import PropTypes from "prop-types";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 function TicketList(props) {
   return (
     <React.Fragment>
       <hr />
-      <Carousel showArrows={true} infiniteLoop={false}>
         {props.ticketList.map((ticket) => (
           <Ticket
             whenTicketClicked={props.onTicketSelection}
@@ -21,7 +18,6 @@ function TicketList(props) {
             formattedWaitTime={ticket.formattedWaitTime}
           />
         ))}
-      </Carousel>
     </React.Fragment>
   );
 }

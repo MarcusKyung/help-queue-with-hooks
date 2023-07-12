@@ -10,9 +10,8 @@ function Ticket(props){
           <p><em>{props.issue}</em></p>
           <p>{props.author}</p> 
           <p><em>{props.formattedWaitTime}</em></p>
-          <hr/>
         </div>
-        <br/>
+        <hr />
     </React.Fragment>
   );
 }
