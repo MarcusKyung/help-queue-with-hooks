@@ -104,6 +104,7 @@ function SignIn() {
             <Card.Header><h1>Sign Out</h1></Card.Header>
             <Card.Body>
               {signOutSuccess}
+              <br />
               <Button variant="primary" onClick={doSignOut}>Sign Out</Button>
             </Card.Body>
 

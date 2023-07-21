@@ -9,7 +9,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 
