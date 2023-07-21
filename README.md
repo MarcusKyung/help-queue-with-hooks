@@ -1,3 +1,10 @@
+project is live at 
+
+https://help-queue-f5d99.web.app/
+https://help-queue-f5d99.firebaseapp.com/
+
+
+
 ## Important Note to Epicodus Students
 
 This project contains all the code from the LearnHowToProgram.com [Section 2: React Fundamentals](https://www.learnhowtoprogram.com/react/react-fundamentals) coursework in which we created a Help Queue application in [React.js](https://reactjs.org/). 
